@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="DBeaver.ShowTipOfTheDayDialog">
+		<item key="DIALOG_X_ORIGIN" value="744"/>
+		<item key="DIALOG_Y_ORIGIN" value="385"/>
+		<item key="DIALOG_WIDTH" value="432"/>
+		<item key="DIALOG_HEIGHT" value="323"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+	<section name="DBeaver.DriverTabbedViewer">
+	</section>
+	<section name="DBeaver.ActiveWizardDialog.NewConnectionWizard">
+		<item key="DIALOG_X_ORIGIN" value="294"/>
+		<item key="DIALOG_Y_ORIGIN" value="63"/>
+		<item key="DIALOG_WIDTH" value="1333"/>
+		<item key="DIALOG_HEIGHT" value="806"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+</section>
