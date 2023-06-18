@@ -81,6 +81,19 @@ ORDER BY
 ;
 
 -- SELECT 앞으로 중요한 것 join 연산. 테이블 2개 이상을 조건식으로 하나로 합하는 연산
+CREATE OR REPLACE PROCEDURE prc_get_member(
+    p_mno IN NUMBER,
+    p_name OUT VARCHAR2,
+    p_email OUT VARCHAR2,
+    p_join_date OUT DATE
+)
+AS
+BEGIN
+    SELECT name, email, join_date
+    INTO p_name, p_email, p_join_date
+    FROM tbl_member
+    WHERE mno = p_mno
+END;
 
 
 
