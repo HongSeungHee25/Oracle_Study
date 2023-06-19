@@ -91,3 +91,6 @@ SELECT * FROM TMP_STUDENT ts ;
 SELECT * FROM TMP_SCORE ts ;
 
 COMMIT;
+
+select custno ,custname, DECODE(grade,'A','VIP','B','일반','C','직원') AS GRADE 
+from member_tbl_02 mt;
