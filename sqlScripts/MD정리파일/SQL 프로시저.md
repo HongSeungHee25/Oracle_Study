@@ -111,3 +111,30 @@
 
 ## 프로시저 삭제 코드
     DROP PROCEDURE search_custom;
+
+-------------
+## 생성한 max_custom 프로시저 JDBC 에서 실행 코드
+	Connection conn = OracleUtility.getConnection();
+		String sql = "{ call max_custom(?,?) }";	-> 저장 프로시저 max_custom 호출 sql. {} 안에서 호출하기
+			try(
+				CallableStatement cstmt = conn.prepareCall(sql);	
+				┗> prepareCall는 저장프로시저 실행하지 위한 객체 생성 메소드
+					) {
+				*참고 : IN 매개변수가 있으면 cstmt.setXXXX() 메소드로 값을 줍니다.
+				
+				
+				cstmt.registerOutParameter(1, Types.VARCHAR);	-> 매개변수 인덱스, 오라클 데이터 타입 지정
+				cstmt.registerOutParameter(2, Types.NUMERIC);
+				cstmt.executeUpdate();	-> 실행
+				
+				System.out.println("가장 많은 구매 수량으로 제품을 구입한 고객 정보");
+				System.out.println("고객 성명 : "+cstmt.getString(1));		-> 프로시저 출력값 첫번째 가져오기
+				System.out.println("고객 나이 : "+cstmt.getInt(2));			-> 프로시저 출력값 두번째 가져오기
+				
+			} catch (SQLException e) {
+				System.out.println("프로시저 실행 오류 : "+e.getMessage());
+			}
+			
+	┗> 실행 결과 : 가장 많은 구매 수량으로 제품을 구입한 고객 정보
+				  고객 성명 : 김미나
+				  고객 나이 : 20
