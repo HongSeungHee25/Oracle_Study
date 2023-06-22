@@ -11,18 +11,18 @@
 ----------------
 
 ## 프로시저 예시 코드 해석
-    DECLARE 										    --변수선언부
+    DECLARE 								    --변수선언부
 	    --vname VARCHAR2(40);				            --스킬라변수
 	    --vage NUMBER(3,0);
-	    vname tbl_custom.name %TYPE;	                --참조변수(타입변수)
+	    vname tbl_custom.name %TYPE;	                	    --참조변수(타입변수)
 	    vage tbl_custom.age %TYPE;		
-    BEGIN											    --프로시저 시작(실행부)
+    BEGIN								    --프로시저 시작(실행부)
 	    --프로시저 내부에는 주로 DML 명령문들을 작성.(함께 실행해야할 에러 SQL : 트랜잭션)
 	    SELECT name,age
-	    INTO vname, vage							    --프로시저 구문 : 검색결과를 프로시저 일반 변수 vname,vage 에 저장
+	    INTO vname, vage						    --프로시저 구문 : 검색결과를 프로시저 일반 변수 vname,vage 에 저장
 	    FROM "TBL_CUSTOM" tc
 	    WHERE CUSTOM_ID = 'twice';					    --1개 행만 결과 조회되는 조건
-												        -- 여러개 행 조회될때는 다른 cursor 필요.
+									    -- 여러개 행 조회될때는 다른 cursor 필요.
 
 	-- DBMS_OUTPUT 는 콘솔에 출력하는 오라클 패키지의 하나이며 PUT_LINE 함수
 	    DBMS_OUTPUT.PUT_LINE('고객이름 : ' || vname);	--|| 는 문자열 연결 연산
@@ -34,12 +34,12 @@
 
 ---------------
 ## 인자와 리턴을 주는 형식. 저장프로시저 코드 해석
-    CREATE OR REPLACE PROCEDURE search_custom(		    --프로시저 이름 설정
-	    c_id IN tbl_custom.CUSTOM_ID %TYPE 	            --매개변수 IN
+    CREATE OR REPLACE PROCEDURE search_custom(		    		--프로시저 이름 설정
+	    c_id IN tbl_custom.CUSTOM_ID %TYPE 	            		--매개변수 IN
     )
     IS 
 	    --참조 변수 선언
-	    vname tbl_custom.NAME %TYPE 		            --저장된 테이블의 컬럼과 동일형식의 변수
+	    vname tbl_custom.NAME %TYPE 		                --저장된 테이블의 컬럼과 동일형식의 변수
 	    vage tbl_custom.AGE %TYPE 
     BEGIN 
 	    SELECT name,age
@@ -48,10 +48,10 @@
 	    WHERE custom_id = c_id;				            
         -- 1개 행만 결과 조회되는 조건. 매개변수로 전달된 값으로 조건 실행
 
-	    DBMS_OUTPUT.PUT_LINE('고객이름 : ' || vname);	 --|| 는 문자열 연결 연산
+	    DBMS_OUTPUT.PUT_LINE('고객이름 : ' || vname);	 	--|| 는 문자열 연결 연산
 	    DBMS_OUTPUT.PUT_LINE('고객나이 : ' || vage);
 	    EXCEPTION
-	    WHEN no_data_found THEN 					    -- no_data_found : 예외 이름
+	    WHEN no_data_found THEN 					-- no_data_found : 예외 이름
 		    DBMS_OUTPUT.PUT_LINE('찾는 데이터가 없습니다.');
     END;
 
@@ -68,14 +68,14 @@
 ## 구매 수량이 최대값인 사용자의 이름,나이를 출력하기 
 ### 매개변수가 IN (입력값) 이 있고, OUT (출력,리턴) 은 없습니다.
     CREATE OR REPLACE PROCEDURE max_custom(
-	    c_name OUT tbl_custom.NAME %TYPE,	            -- 출력(리턴) 매개 변수
+	    c_name OUT tbl_custom.NAME %TYPE,	            		-- 출력(리턴) 매개 변수
 	    c_age OUT tbl_custom.AGE %TYPE
     )		    --프로시저 이름 설정
     IS 
 	    --참조 변수 선언
 	    maxval number(5); 
 	    cid tbl_custom.custom_id %TYPE;
-    --	vname tbl_custom.name %TYPE;	                --참조변수(타입변수)
+    --	vname tbl_custom.name %TYPE;	                		--참조변수(타입변수)
     --	vage tbl_custom.age %TYPE;
     BEGIN 
 	    SELECT max(qty)
@@ -89,10 +89,10 @@
 		    INTO c_name,c_age
 	    FROM tbl_custom tc
 	    WHERE custom_id = cid;
-	    DBMS_OUTPUT.PUT_LINE('고객이름 : ' || c_name);	   --|| 는 문자열 연결 연산
+	    DBMS_OUTPUT.PUT_LINE('고객이름 : ' || c_name);	         --|| 는 문자열 연결 연산
 	    DBMS_OUTPUT.PUT_LINE('고객나이 : ' || c_age);
 	    EXCEPTION
-	    WHEN no_data_found THEN 					      -- no_data_found : 예외 이름
+	    WHEN no_data_found THEN 					 -- no_data_found : 예외 이름
 		    DBMS_OUTPUT.PUT_LINE('찾는 데이터가 없습니다.');
     END;
 
@@ -102,7 +102,7 @@
 	    vname tbl_custom.name %TYPE;
 	    vage tbl_custom.age %TYPE;
     BEGIN 
-	    max_custom(vname,vage);		-- vname, vage 은 OUT 매개변수 값을 받을 실제 변수입니다.
+	    max_custom(vname,vage);					-- vname, vage 은 OUT 매개변수 값을 받을 실제 변수입니다.
 	    DBMS_OUTPUT.PUT_LINE('*고객 이름 : ' || vname);
 	    DBMS_OUTPUT.PUT_LINE('*고객 나이 : ' || vage);
     END;
