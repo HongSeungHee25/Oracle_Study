@@ -24,7 +24,6 @@ CREATE TABLE bookrent(
 	delay_days NUMBER(3,0)
 );
 
-
 ALTER TABLE bookrent
 ADD CONSTRAINT mem_idx FOREIGN KEY (mem_idx)
 	REFERENCES bookmember (mem_idx);
@@ -32,11 +31,6 @@ ADD CONSTRAINT mem_idx FOREIGN KEY (mem_idx)
 ALTER TABLE bookrent
 ADD CONSTRAINT bcode FOREIGN KEY (bcode)
 	REFERENCES books (bcode);
-
--------------------------------------------------------
--- mem_idx seq 값 생성
--- CREATE SEQUENCE mem_idx_seq START WITH 10001;
-
 -------------------------------------------------------
 INSERT INTO BOOKMEMBER b VALUES (10001,'이하니','honey@naver.com','010-9889-0567','1122');
 INSERT INTO BOOKMEMBER b VALUES (10002,'이세종','jong@daum.net','010-2354-6773','2345');
@@ -51,22 +45,16 @@ INSERT INTO BOOKS b VALUES ('A1102','페스트','알베르트 까뮈','민음사
 
 INSERT INTO BOOKRENT b VALUES (1,10001,'B1101',
 timestamp'2023-05-01 14:22:00.0','2023-05-15',timestamp'2023-05-14 11:30:00.0',-1);
-
 INSERT INTO BOOKRENT b VALUES (2,10002,'C1101',
 timestamp'2023-06-12 17:04:00.0','2023-06-25',NULL,NULL);
-
 INSERT INTO BOOKRENT b VALUES (3,10003,'B1101',
 timestamp'2023-06-03 10:15:00.0','2023-06-17',timestamp'2023-06-17 11:33:00.0',0);
-
 INSERT INTO BOOKRENT b VALUES (4,10004,'C1101',
 timestamp'2023-04-03 13:34:00.0','2023-04-17',timestamp'2023-04-15 14:20:00.0',-2);
-
 INSERT INTO BOOKRENT b VALUES (5,10001,'A1101',
 timestamp'2023-06-16 11:11:00.0','2023-06-30',NULL,NULL);
-
 INSERT INTO BOOKRENT b VALUES (6,10003,'A1102',
 timestamp'2023-06-17 11:41:00.0','2023-07-01',NULL,NULL);
-
 INSERT INTO BOOKRENT b VALUES (7,10002,'A1101',
 timestamp'2023-05-15 13:42:00.0','2023-05-29',timestamp'2023-05-30 12:42:00.0',1);
 
@@ -103,18 +91,18 @@ FROM(
 	SELECT customid, count(*) buy_count
 	FROM TBL_BUY tb 
 	GROUP BY CUSTOMID
-	ORDER BY buy_count DESC;
+	ORDER BY buy_count DESC
 )
--- WHERE rownum = 1;		-- rownum에 쓸수 있는 연산은 >=, <=,>,<, BETWEEN,rownum = 1(1이외의 다른 값은 동작오류)
+WHERE rownum <= 1;		-- rownum에 쓸수 있는 연산은 >=, <=,>,<, BETWEEN,rownum = 1(1이외의 다른 값은 동작오류)
 
 -- 오라클은 조회된 행에 순서대로 번호를 부여하여 rownum 컬럼에 저장한다. 항상 사용할 수 있는 컬럼입니다.
 SELECT rownum, buy_seq,customid,qty
 FROM TBL_BUY tb 		-- rownum은 ORDER BY 하기 전의 rownum
 ORDER BY qty DESC ;
-
-
-
-
+-----------------------------------------------------------------------------------------------------------------------------
+-- select 연산 중 집합연산이 있습니다. 
+-- 이 중 union all 연산은 행을 합칠때 쓰는 연산이라고 수업시간에 했습니다. 
+-- 그외에  minus 연산에 대해 알아보고 언제 사용할수 있는지 예시도 만들어보세요.
 
 
 
