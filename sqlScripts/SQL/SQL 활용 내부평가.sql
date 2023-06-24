@@ -104,13 +104,15 @@ ORDER BY qty DESC ;
 -- 이 중 union all 연산은 행을 합칠때 쓰는 연산이라고 수업시간에 했습니다. 
 -- 그외에  minus 연산에 대해 알아보고 언제 사용할수 있는지 예시도 만들어보세요.
 
-
-
-
-
-
 -- 1. '해커스토익' 책이 대여된 횟수를 구하시오
-
+SELECT b.TITLE , br.rent_no
+FROM BOOKS b JOIN (
+	SELECT br.bcode, count(br.rent_no) AS rent_no
+	FROM BOOKRENT br 
+	GROUP BY br.bcode
+)br
+ON b.BCODE = br.BCODE 
+WHERE b.TITLE = '해커스토익'
 
 
 
