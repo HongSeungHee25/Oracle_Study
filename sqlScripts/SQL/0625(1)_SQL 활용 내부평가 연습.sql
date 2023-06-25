@@ -77,7 +77,10 @@ JOIN books b ON br.bcode = b.bcode
 WHERE b.title = '코스모스';
 
 -- 8. 연체 일수가 가장 많은 책을 대여한 회원의 이름과 연체 일수를 조회하시오.
-
+SELECT bm.name, br.delay_days
+FROM bookrent br
+JOIN bookmember bm ON br.mem_idx = bm.mem_idx
+WHERE br.delay_days = (SELECT MAX(delay_days) FROM bookrent);
 
 -- 9. "해커스토익" 책이 대여된 횟수를 구하시오.
 SELECT b.TITLE , br.rent_no
@@ -90,32 +93,91 @@ ON b.BCODE = br.BCODE
 WHERE b.TITLE = '해커스토익'
 
 -- 10. 책을 대여한 회원 중에서 "010-"로 시작하는 전화번호를 가진 회원의 수를 구하시오.
-
+SELECT COUNT(DISTINCT bm.MEM_IDX) AS "회원 수"
+FROM BOOKMEMBER bm
+JOIN BOOKRENT br ON bm.MEM_IDX = br.MEM_IDX
+WHERE bm.TEL LIKE '010-%';
 
 -- 11. "나길동" 회원이 대여한 책들 중에서 아직 반납되지 않은 책의 수를 구하시오.
-
+SELECT COUNT(*) AS "반납 전 책의 수"
+FROM bookmember bm
+JOIN bookrent br ON bm.mem_idx = br.mem_idx
+WHERE bm.name = '나길동' AND br.return_date IS NULL;
 
 -- 12. "2023-06-01"부터 "2023-06-30" 사이에 대여된 책의 수를 날짜별로 구하시오.
-
+SELECT TO_CHAR(rent_date, 'YYYY-MM-DD') AS "날짜", COUNT(*) AS "대여된 책의 수"
+FROM bookrent
+WHERE rent_date BETWEEN DATE '2023-06-01' AND DATE '2023-06-30'		-- 사이에 있는 값 가져온다는 의미
+GROUP BY TO_CHAR(rent_date, 'YYYY-MM-DD')
+ORDER BY "날짜";
 
 -- 13. 연체 일수가 0일인 회원들의 이름과 이메일 주소를 조회하시오.
+SELECT b.NAME , b.EMAIL 
+FROM BOOKMEMBER b JOIN BOOKRENT br
+ON b.MEM_IDX = br.MEM_IDX 
+WHERE br.DELAY_DAYS = 0;
 
+SELECT name, email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE delay_days = 0
+);
 
 -- 14. "해커스토익" 책을 대여한 회원들과 "푸른사자 와니니" 책을 대여한 회원들의 합집합을 구하시오.
-
-
+SELECT mem_idx, bcode
+FROM bookrent
+WHERE bcode = 'B1101'
+UNION ALL
+SELECT mem_idx, bcode
+FROM bookrent
+WHERE bcode = 'C1101';
+-- 위에 코드결과
+--10001	B1101
+--10003	B1101
+--10002	C1101
+--10004	C1101
 -- 15. "코스모스" 책을 대여한 회원들의 이름과 대여일자를 조회하되, 최대 3명까지만 조회하시오.
-
+SELECT b.NAME , br.RENT_DATE 
+FROM BOOKMEMBER b JOIN BOOKRENT br
+ON b.MEM_IDX = br.MEM_IDX 
+JOIN BOOKS b2 ON b2.BCODE = br.BCODE 
+WHERE b2.TITLE = '코스모스' AND rownum <= 3;
 
 -- 16. "푸른사자 와니니" 책을 대여한 회원들 중에서 2명을 제외한 나머지 회원들의 이메일 주소를 조회하시오.
-
+SELECT email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'C1101'
+    MINUS
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'C1101'
+)
+AND ROWNUM <= 2;
 
 -- 17. "2023-06-01"부터 "2023-06-30" 사이에 대여된 책의 수를 날짜별로 구하시오. 단, 날짜는 월(day)부분을 제외하고 출력하시오.
-
+SELECT TRUNC(rent_date, 'MONTH') AS "월", COUNT(*) AS "대여된 책의 수"
+FROM bookrent
+WHERE rent_date BETWEEN DATE '2023-06-01' AND DATE '2023-06-30'
+GROUP BY TRUNC(rent_date, 'MONTH');
 
 -- 18. "푸른사자 와니니" 책을 대여한 회원들 중에서 "해커스토익" 책을 대여한 회원들을 제외한 회원들의 이메일 주소를 조회하시오.
-
-
+SELECT email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'C1101'
+)
+AND mem_idx NOT IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'B1101'
+);
 -- 19. "해커스토익" 책을 대여한 회원들 중에서 가장 늦게 반납한 회원의 이름과 대여일자, 반납일자를 조회하시오.
 
 
@@ -150,4 +212,5 @@ WHERE b.TITLE = '해커스토익'
 
 
 -- 30. 회원별로 대여한 책의 평균 대여 기간을 조회하시오.
+
 
