@@ -190,6 +190,9 @@ AND mem_idx NOT IN (
 -- 22. "해커스토익" 책을 대여한 회원들 중에서 연락처(tel) 정보를 가지고 있지 않은 회원들의 이름과 이메일 주소를 조회하시오.
 
 
+-- 22. 책을 대여한 회원들 중에서 책을 반납하지 않은 회원들의 이름과 이메일 주소를 조회하시오.
+
+
 -- 23. "코스모스" 책을 대여한 회원들 중에서 반납되지 않은 대여 건의 수를 구하시오.
 
 
@@ -197,7 +200,20 @@ AND mem_idx NOT IN (
 
 
 -- 25. 대여 일자(rent_date)가 가장 오래된 책의 정보를 조회하시오.
-
+SELECT bs.*
+FROM books bs JOIN BOOKRENT b 
+ON bs.BCODE = b.BCODE 
+WHERE b.RENT_DATE = (
+    SELECT MIN(b.RENT_DATE)
+    FROM BOOKRENT b
+);
+-- 참고 : 출판 일자가 가장 오래된 책의 정보를 조회
+SELECT *
+FROM books
+WHERE pdate = (
+    SELECT MIN(pdate)
+    FROM books
+);
 
 -- 26. 각 회원별로 대여한 책의 수를 조회하고, 대여한 책의 수가 가장 많은 회원을 찾으시오.
 
