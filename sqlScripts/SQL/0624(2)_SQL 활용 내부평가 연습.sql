@@ -33,6 +33,7 @@ SELECT trunc(RENT_DATE),count(RENT_DATE)
 FROM BOOKRENT b 
 GROUP BY trunc(RENT_DATE)
 
+
 SELECT TRUNC(rent_date, 'MONTH') AS month, COUNT(*) AS rental_count
 FROM bookrent
 GROUP BY TRUNC(rent_date, 'MONTH');
