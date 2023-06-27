@@ -112,7 +112,41 @@ FROM BOOKS b JOIN (
 	GROUP BY br.bcode
 )br
 ON b.BCODE = br.BCODE 
-WHERE b.TITLE = '해커스토익'
+WHERE b.TITLE = '해커스토익';
+
+SELECT email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'C1101'
+)
+MINUS
+SELECT email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT mem_idx
+    FROM bookrent
+    WHERE bcode = 'B1101'
+);
+
+SELECT email
+FROM bookmember
+WHERE mem_idx IN (
+    SELECT br.mem_idx
+    FROM bookrent br
+    JOIN books b ON br.bcode = b.bcode
+    WHERE b.title = '푸른사자 와니니'
+        AND br.return_date IS NULL
+        AND br.exp_date < SYSDATE
+)
+AND mem_idx NOT IN (
+    SELECT br.mem_idx
+    FROM bookrent br
+    JOIN books b ON br.bcode = b.bcode
+    WHERE b.title = '해커스토익'
+);
+
 
 
 
