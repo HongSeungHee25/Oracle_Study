@@ -45,7 +45,7 @@ FROM ROLE_SYS_PRIVS;	-- 오라클이 db 관리를 위해 필요한 테이블
 --2) SQL> grant create view to iclass; 실행 필요. 
 --3) 디비버에서 iclass 재연결
 
-CREATE VIEW v_test				-- 조인 결과 SELETE 로 가상(논리적) 테이블을 생성
+CREATE VIEW v_test				-- 조인 결과 SELECT 로 가상(논리적) 테이블을 생성
 AS 
 SELECT tsc.stuno, subject, name, jumsu, teacher 	-- * 모든 컬럼 지정하면 오류
 FROM TMP_SCORE tsc 				-- 물리적 테이블

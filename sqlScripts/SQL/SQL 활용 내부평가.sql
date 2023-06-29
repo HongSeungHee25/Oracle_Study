@@ -130,6 +130,7 @@ WHERE mem_idx IN (
     WHERE bcode = 'B1101'
 );
 
+
 SELECT email
 FROM bookmember
 WHERE mem_idx IN (
@@ -146,6 +147,12 @@ AND mem_idx NOT IN (
     JOIN books b ON br.bcode = b.bcode
     WHERE b.title = '해커스토익'
 );
+-----------------------------------------------------------------------------------------------------------------------------
+-- '10002' 회원번호 반납날짜는 오늘로 한다는 코드
+UPDATE BOOKRENT SET return_date = sysdate WHERE mem_idex = 10002;
+
+-- 자동으로 연체일 계산하는 코드
+UPDATE BOOKRENT SET delay_days = TRUNC(return_date) - exp_date; 
 
 
 
