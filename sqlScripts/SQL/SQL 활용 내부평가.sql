@@ -153,9 +153,118 @@ UPDATE BOOKRENT SET return_date = sysdate WHERE mem_idex = 10002;
 
 -- 자동으로 연체일 계산하는 코드
 UPDATE BOOKRENT SET delay_days = TRUNC(return_date) - exp_date; 
+-----------------------------------------------------------------------------------------------------------------------------
+-- 전화번호 하이픈 제거하고 최대 2명까지 출력
+-- REPLACE(변경하고자 하는 문자열 또는 컬럼명, 찾을 문자열, 대체할 문자열)
+SELECT BM.mem_idx, BM.name, BM.email, REPLACE(BM.tel, '-', '') AS tel, BM.password
+FROM BOOKMEMBER BM
+JOIN (
+    SELECT BR.mem_idx
+    FROM BOOKRENT BR
+    WHERE ROWNUM <= 2
+    GROUP BY BR.mem_idx
+) R ON BM.mem_idx = R.mem_idx;
 
 
+SELECT mem_idx, name, email, RPAD(SUBSTR(tel, 1, LENGTH(tel) - 4), LENGTH(tel), '*') AS masked_tel, password
+FROM bookmember;
+SELECT mem_idx, name, email, tel, RPAD(SUBSTR(password, 1, 2), LENGTH(password), '*') AS masked_password
+FROM bookmember;
+SELECT mem_idx, name, email, tel, 
+       SUBSTR(password, 1, 1) || 
+       RPAD('*', LENGTH(password) - 2, '*') || 
+       SUBSTR(password, -1, 1) AS masked_password
+FROM bookmember;
 
+-----------------------------------------------------------------------------------------------------------------------------
+-- 3. 회원별로 대출한 도서 중 연체된 도서의 수와 총 연체일수를 조회
+SELECT b.name, COUNT(br.rent_no) AS overdue_books, SUM(br.delay_days) AS total_delay_days
+FROM bookmember b
+JOIN bookrent br ON b.mem_idx = br.mem_idx
+WHERE br.delay_days > 0
+GROUP BY b.name;
+
+-- 4. 대출된 도서와 도서 회원의 정보를 UNION ALL로 결합하여 조회
+SELECT '도서' AS TYPE, b.TITLE , b.WRITER ,b.PUBLISHER , br.RENT_DATE 
+FROM BOOKS b 
+JOIN BOOKRENT br ON b.BCODE = br.BCODE 
+UNION ALL 
+SELECT '회원' AS TYPE, bm.NAME ,bm.EMAIL ,bm.TEL ,br.RENT_DATE 
+FROM BOOKMEMBER bm 
+JOIN BOOKRENT br ON bm.MEM_IDX = br.MEM_IDX ;
+
+-- 9. 날짜 관련 함수인 TRUNC를 사용하여 대여일자의 월별 횟수를 구하는 예시
+SELECT TRUNC(rent_date, 'mm') AS "대여", COUNT(*) AS "월별 횟수"
+FROM bookrent
+GROUP BY TRUNC(rent_date, 'mm')
+ORDER BY TRUNC(rent_date, 'mm');
+
+-- 10. "최행운" 회원이 대여한 책의 수를 구하시오.
+SELECT b.NAME , COUNT(br.RENT_NO) AS "대여한 책의 수" 
+FROM BOOKMEMBER b JOIN BOOKRENT br
+ON b.MEM_IDX = br.MEM_IDX 
+GROUP BY b.NAME 
+HAVING b.NAME = '최행운';
+
+-- 10번문제 서브쿼리
+SELECT b.NAME , br.rent_count
+FROM BOOKMEMBER b JOIN (
+	SELECT br.MEM_IDX, COUNT(br.RENT_NO) AS rent_count
+	FROM BOOKRENT br 
+	GROUP BY br.MEM_IDX
+)br
+ON b.MEM_IDX = br.MEM_IDX
+WHERE b.NAME = '최행운';
+
+-- 13. 반납일(exp_date)이 지나서 아직 반납되지 않은 책들의 목록을 조회하시오. (14일 이후) 
+SELECT b.title, bm.name, br.rent_date, br.exp_date
+FROM books b
+JOIN bookrent br ON b.bcode = br.bcode
+JOIN bookmember bm ON br.mem_idx = bm.mem_idx
+WHERE br.exp_date < TRUNC(SYSDATE) - 14
+AND br.return_date IS NULL;
+
+-- "나길동" 회원의 대여 지연일과 대여 건수 조회 
+SELECT b.NAME, (
+	-- BOOKRENT 테이블에서 해당 회원과 관련된 대여 정보를 가져옵니다.(연체일수)
+    SELECT br.DELAY_DAYS
+    FROM BOOKRENT br
+    WHERE br.MEM_IDX = b.MEM_IDX
+) AS DELAY_DAYS,
+(
+	-- BOOKRENT 테이블에서 해당 회원의 대여 건수를 카운트합니다.
+    SELECT COUNT(br.RENT_NO)
+    FROM BOOKRENT br
+    WHERE br.MEM_IDX = b.MEM_IDX
+) AS rent_count
+FROM BOOKMEMBER b
+WHERE b.NAME = '나길동';
+
+-- 21. "2023-06-01"부터 "2023-06-30" 사이에 대여된 책의 수를 날짜별로 구하시오.
+SELECT TO_CHAR(rent_date, 'YYYY-MM-DD') AS "날짜", COUNT(*) AS "대여된 책의 수"
+FROM bookrent
+WHERE rent_date BETWEEN DATE '2023-06-01' AND DATE '2023-06-30'		-- 사이에 있는 값 가져온다는 의미
+GROUP BY TO_CHAR(rent_date, 'YYYY-MM-DD')
+ORDER BY "날짜"; 
+
+-- 24. "코스모스" 책을 대여한 회원들의 이름과 대여일자를 조회하되, 최대 3명까지만 조회하시오.
+SELECT b.NAME , br.RENT_DATE  
+FROM BOOKMEMBER b JOIN BOOKRENT br 
+ON b.MEM_IDX = br.MEM_IDX 
+JOIN BOOKS bs ON bs.BCODE = br.BCODE 
+WHERE bs.TITLE = '코스모스' AND rownum <= 3;
+
+-- 26. "2023-06-01"부터 "2023-06-30" 사이에 대여된 책의 수를 날짜별로 구하시오. 단, 날짜는 월(day)부분을 제외하고 출력하시오.
+SELECT TRUNC(rent_date, 'MONTH') AS "월", COUNT(*) AS "대여된 책의 수"
+FROM bookrent
+WHERE rent_date BETWEEN DATE '2023-06-01' AND DATE '2023-06-30'
+GROUP BY TRUNC(rent_date, 'MONTH');
+
+-- 40. 회원별로 대여한 책의 평균 대여 기간을 조회하시오.
+SELECT b.NAME, AVG(TRUNC(br.return_date) - TRUNC(br.rent_date)) AS "평균 대여 기간"
+FROM BOOKMEMBER b
+JOIN BOOKRENT br ON b.MEM_IDX = br.MEM_IDX
+GROUP BY b.NAME;
 
 
 

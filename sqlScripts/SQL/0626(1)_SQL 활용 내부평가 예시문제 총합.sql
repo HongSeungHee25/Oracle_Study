@@ -15,10 +15,6 @@ ON b.BCODE = br.BCODE
 WHERE br.RETURN_DATE IS NULL 
 
 -- 3. 회원별로 대출한 도서 중 연체된 도서의 수와 총 연체일수를 조회
---SELECT b.NAME ,br.DELAY_DAYS 
---FROM BOOKMEMBER b JOIN BOOKRENT br
---ON b.MEM_IDX = br.MEM_IDX
---WHERE br.DELAY_DAYS > 0;
 SELECT b.name, COUNT(br.rent_no) AS overdue_books, SUM(br.delay_days) AS total_delay_days
 FROM bookmember b
 JOIN bookrent br ON b.mem_idx = br.mem_idx
@@ -26,11 +22,6 @@ WHERE br.delay_days > 0
 GROUP BY b.name;
 
 -- 4. 대출된 도서와 도서 회원의 정보를 UNION ALL로 결합하여 조회
---SELECT MEM_IDX , BCODE 
---FROM BOOKRENT b 
---UNION ALL 
---SELECT MEM_IDX , NAME
---FROM BOOKMEMBER b2 
 SELECT '도서' AS TYPE, b.TITLE , b.WRITER ,b.PUBLISHER , br.RENT_DATE 
 FROM BOOKS b 
 JOIN BOOKRENT br ON b.BCODE = br.BCODE 
@@ -108,7 +99,6 @@ GROUP BY b.TITLE
 HAVING b.TITLE = '푸른사자 와니니';
 
 -- 13. 반납일(exp_date)이 지나서 아직 반납되지 않은 책들의 목록을 조회하시오. (14일 이후) 
--- 이건 실행 X
 SELECT b.title, bm.name, br.rent_date, br.exp_date
 FROM books b
 JOIN bookrent br ON b.bcode = br.bcode
