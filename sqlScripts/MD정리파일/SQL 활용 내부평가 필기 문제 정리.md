@@ -1,6 +1,6 @@
 # SQL 활용 내부평가 필기 문제 정리
 ## 1. DDL (Data Definition Language)
-+ DDL은 데이터베이스 구조를 정의하거나 수정하는데 사용됩니다. 주요 DDL 문은 `CREATE`, `ALTER`, `DROP` 등이 있습니다. 예를 들어, `CREATE TABLE` 문은 새로운 테이블을 생성하는 데 사용되고, `ALTER TABLE` 문은 테이블의 구조를 변경하는 데 사용됩니다.
++ DDL은 데이터베이스 구조를 정의하거나 수정하는데 사용됩니다. 주요 DDL 문은 `CREATE`, `ALTER`, `DROP` , `TRUNCATE` 등이 있습니다. 예를 들어, `CREATE TABLE` 문은 새로운 테이블을 생성하는 데 사용되고, `ALTER TABLE` 문은 테이블의 구조를 변경하는 데 사용됩니다.
 
 ## 2. 제약조건 (Constraints)
 + 제약조건은 데이터의 무결성을 유지하기 위해 사용됩니다. 주요 제약조건에는 `PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `NOT NULL`, `CHECK` 등이 있습니다. 예를 들어, `PRIMARY KEY` 제약조건은 테이블의 기본 키를 정의하고, `FOREIGN KEY` 제약조건은 테이블 간의 관계를 정의합니다.
