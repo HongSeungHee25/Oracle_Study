@@ -1,13 +1,3 @@
-DROP TABLE Payment CASCADE CONSTRAINTS;
-DROP TABLE car_rent CASCADE CONSTRAINTS;
-DROP TABLE car CASCADE CONSTRAINTS;
-DROP TABLE Discount_Rate CASCADE CONSTRAINTS;
-DROP TABLE CARD CASCADE CONSTRAINTS;
-DROP TABLE customer CASCADE CONSTRAINTS;
-DROP TABLE Drivers_License CASCADE CONSTRAINTS;
-DROP TABLE Reservation_Status CASCADE CONSTRAINTS;
-DROP TABLE vehicle_class CASCADE CONSTRAINTS;
-
 CREATE TABLE car
 (
     car_id varchar2(30) NOT NULL,
@@ -55,7 +45,6 @@ CREATE TABLE customer
     FOREIGN KEY (license_id) REFERENCES Drivers_License (license_id)
 );
 
-
 CREATE TABLE Drivers_License
 (
     license_id number NOT NULL,
@@ -98,9 +87,6 @@ CREATE TABLE vehicle_class
     domestic_Market varchar2(30) NOT NULL,
     PRIMARY KEY (Rating_id)
 );
-
-ALTER TABLE card ADD discount_rate NUMBER(5, 2);
-
 -----------------------------------------------------------------------------------------------------------------
 INSERT INTO DRIVERS_LICENSE dl VALUES (10001,'12-00-019328-61','2020-03-09','2030-03-09','1종보통',null);
 INSERT INTO DRIVERS_LICENSE dl VALUES (10002,'21-19-174133-01','2023-08-21','2033-08-21','2종보통',null);
@@ -220,6 +206,9 @@ INSERT INTO PAYMENT p VALUES ('AB103','jone9785',996,'2023-06-30',NULL,'신용�
 
 SELECT * FROM PAYMENT p ;
 
+SELECT c.CARTYPE ,c.DAILY_RENTAL_RATE + c.DAILY_PREMIUM AS "할인율 적용 전 가격"
+FROM CAR c;
+
 DELETE FROM PAYMENT p ;
 
 -----------------------------------------------------------------------------------------------------------------
@@ -241,14 +230,7 @@ SELECT p.*, c.CARD_NAME
 FROM PAYMENT p JOIN CARD c 
 ON p.card_id = c.CARD_ID;
 
-SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE,p.PAYMENT_AMOUNT ,p.PAYMENT_METHOD ,p.CAR_ID , c.CARD_NAME
+SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE, c.CARD_NAME, p.PAYMENT_METHOD, p.CARD_ID
 FROM PAYMENT p 
-LEFT JOIN CARD c ON p.CARD_ID = c.CARD_ID;
+JOIN CARD c ON p.CARD_ID = c.CARD_ID;
 
-SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE,p.PAYMENT_AMOUNT ,p.PAYMENT_METHOD ,c2.CARTYPE , c.CARD_NAME
-FROM PAYMENT p 
-LEFT JOIN CARD c ON p.CARD_ID = c.CARD_ID
-LEFT JOIN CAR c2 ON p.CAR_ID = c2.CAR_ID ;
-
-SELECT c.CARTYPE ,c.DAILY_RENTAL_RATE + c.DAILY_PREMIUM AS "할인율 적용 전 가격"
-FROM CAR c ;
