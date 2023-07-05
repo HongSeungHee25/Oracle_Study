@@ -243,7 +243,17 @@ ON p.card_id = c.CARD_ID;
 
 SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE,p.PAYMENT_AMOUNT ,p.PAYMENT_METHOD ,p.CAR_ID , c.CARD_NAME
 FROM PAYMENT p 
-LEFT JOIN CARD c ON p.CARD_ID = c.CARD_ID;
+LEFT JOIN CARD c ON p.CARD_ID = c.CARD_ID;SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE,p.PAYMENT_AMOUNT ,p.PAYMENT_METHOD ,p.CAR_ID , c.CARD_NAME
+FROM PAYMENT p 
+LEFT JOIN CARD c ON p.CARD_ID = c.CARD_ID;INSURANCEINSURANCEINSURANCEinsuranceinsuranceinsuranceinsuranceSELECT p.car_no , c.price + c.insurance AS total 
+FROM PAYMENT p JOIN CAR c 
+ON p.car_no = c.car_noSELECT p.car_no , c.price + c.insurance AS total 
+FROM PAYMENT p JOIN CAR c 
+ON p.car_no = c.car_noSELECT p.car_no , c.price + c.insurance AS total 
+FROM PAYMENT p JOIN CAR c 
+ON p.car_no = c.car_noSELECT p.car_no , c.price + c.insurance AS total 
+FROM PAYMENT p JOIN CAR c 
+ON p.car_no = c.car_no
 
 SELECT p.PAYMENT_ID, p.CUSTOMER_ID, p.HISTORY_ID, p.PAYMENT_DATE,p.PAYMENT_AMOUNT ,p.PAYMENT_METHOD ,c2.CARTYPE , c.CARD_NAME
 FROM PAYMENT p 
@@ -252,3 +262,11 @@ LEFT JOIN CAR c2 ON p.CAR_ID = c2.CAR_ID ;
 
 SELECT c.CARTYPE ,c.DAILY_RENTAL_RATE + c.DAILY_PREMIUM AS "할인율 적용 전 가격"
 FROM CAR c ;
+
+
+
+
+-- 핀 고정 단축키 = ctrl + shift + p
+SELECT * FROM PAYMENT ;
+SELECT * FROM CAR ;
+SELECT * FROM CAR_RENT ;
