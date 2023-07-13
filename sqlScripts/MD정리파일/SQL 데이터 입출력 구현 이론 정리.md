@@ -67,7 +67,7 @@
         CallableStatement cstmt = conn.prepareCall(sql);	
 	    //prepareCall는 저장프로시저 실행하지 위한 객체 생성 메소드
     
-3. 매개변수 설정 : 매개변수 인덱수스, 오라클 데이터 타입 지정
+3. 매개변수 설정 : 매개변수 인덱스, 오라클 데이터 타입 지정
 
         cstmt.registerOutParameter(1, Types.VARCHAR);	
 	    cstmt.registerOutParameter(2, Types.NUMERIC);
