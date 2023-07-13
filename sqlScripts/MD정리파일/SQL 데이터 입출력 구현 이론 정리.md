@@ -71,7 +71,7 @@
 
         cstmt.registerOutParameter(1, Types.VARCHAR);	
 	    cstmt.registerOutParameter(2, Types.NUMERIC);
-        //IN 매개변수가 있으면 cstmt.setXXXX() 메소드로 값을 줍니다.
+        
 
 4. 프로시저 실행 : **CallableStatement** 의 **execute()** 메서드를 호출하여 프로시저를 실행합니다. 결과가 반환되는 경우 **executeQuery()** 메서드를 사용하고, 결과가 반환되지 않는 경우 **executeUpdate()** 메서드를 사용합니다.
 
@@ -83,5 +83,6 @@
 	    System.out.println("고객 성명 : "+cstmt.getString(1));		//프로시저 출력값 첫번째 가져오기
 	    System.out.println("고객 나이 : "+cstmt.getInt(2));			//프로시저 출력값 두번째 가져오기
         ┗> (1),(2) 은 출력 매개변수의 인덱스입니다.
+        ┗> //IN 매개변수가 있으면 cstmt.setXXXX() 메소드로 값을 줍니다.
 
 
