@@ -96,13 +96,15 @@ CREATE OR REPLACE PROCEDURE proc_set_money(
 	-- 'acnt' 라는 이름의 'NUMBER' 타입의 입력 매개변수를 정의합니다.
 	isSuccess OUT varchar2 	
 	-- 'isSuccess' 라는 이름의 'varchar2' 타입의 출력 매개변수를 정의합니다.
+	-- 매개변수 
 )
-IS	-- 프로시저의 본체를 시작하는 키워드 입니다.
+IS	-- 프로시저의 본문을 시작하는 키워드 입니다.
 	vseq NUMBER;			
 	-- 'vseq' 라는 이름의 'NUMBER' 타입의 변수를 선언합니다.
 	vprice NUMBER;
 	-- 'vprice' 라는 이름의 'NUMBER' 타입의 변수를 선언합니다.
-BEGIN 	-- 프로시저 본체의 시작을 나타냅니다.
+	-- 프로시저에 지역 변수
+BEGIN 	-- 프로시저 시작하는 키워드 입니다.
 	INSERT INTO p_buy(buy_seq,customid,pcode,qty,buy_date)
 		VALUES (buy_seq.nextval, acustom_id,apcode,acnt,sysdate);	
 	-- 'p_buy' 테이블에 데이터를 삽입합니다. 'buy_seq.nextval' 은 시퀀스에서 다음 값을 가져옵니다.
