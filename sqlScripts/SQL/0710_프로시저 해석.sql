@@ -136,7 +136,7 @@ BEGIN 	-- 프로시저 시작하는 키워드 입니다.
 		-- 실행 실패하면 'isSuccess' 변수에 'fail' 라는 값을 할당합니다.
 END;	--프로시저 본체의 끝을 나타냅니다.
 
-
+SELECT * FROM P_BUY pb ;
 
 -- 롤백 시나리오 만들기
 ALTER TABLE p_buy ADD money NUMBER(7) CHECK (money >= 10000);
