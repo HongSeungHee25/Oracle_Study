@@ -63,7 +63,7 @@
 
         Connection conn = OracleUtility.getConnection();
 
-2. CallableStatement 준비 : 저장 프로시저를 호출하기 위해 CallableStatement 객체를 준비합니다. Connection.prepareCall() 메서드를 사용하여 **CallableStatement** 를 생성합니다. 프로시저 호출 구문은 **{ call 프로시저이름(인자1, 인자2, ...) }** 형태로 작성합니다.
+2. CallableStatement 준비 : 저장 프로시저를 호출하기 위해 CallableStatement 객체를 준비합니다. Connection.prepareCall() 메서드를 사용하여 **CallableStatement** 를 생성합니다. 프로시저 호출 구문은 **{ call 프로시저이름(매개변수1, 매개변수2, ...) }** 형태로 작성합니다.
 
         String sql = "{ call max_custom(?,?) }";	//저장 프로시저 max_custom 호출 sql. {} 안에서 호출하기
         CallableStatement cstmt = conn.prepareCall(sql);	
