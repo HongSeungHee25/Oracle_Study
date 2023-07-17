@@ -31,12 +31,16 @@ BEGIN
 	 */
 	INSERT INTO P_BUY2(buy_seq,customid,pcode,qty,buy_date)
 		VALUES(p_buy2_seq.nextval, scutomid, spcode,sqty,sysdate);
+	
 	SELECT price INTO vprice
 		FROM TBL_PRODUCT tp WHERE pcode = spcode;
+	
 	SELECT p_buy2_seq.currval INTO vseq 
 		FROM dual; -- 단일 행 dual 가상 테이블 -> 1회성으로 확인할려고 쓰는 테이블 
+		
 	UPDATE P_BUY2 SET money = vprice * sqtn
 		WHERE buy_seq = vseq;
+	
 	DBMS_OUTPUT.PUT_LINE('실행 성공');
 	COMMIT;
 	EXCEPTION 
@@ -54,8 +58,8 @@ END;
  */
 
 BEGIN 
-	set_money2('mina012','APLE5kg',5);
+	set_money2('mina012','APLE5kg',10);
 END;
 
-
+SELECT * FROM P_BUY2 pb ;
 	
