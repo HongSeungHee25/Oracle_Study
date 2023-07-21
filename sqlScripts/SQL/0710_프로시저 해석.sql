@@ -156,9 +156,140 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE('결과 : '|| vresult);
 	-- "결과" 와 'VRESULT' 변수의 값을 합쳐서 출력합니다.
 END;	-- 익명 블록의 끝을 나타내는 키워드입니다.
+SELECT 
+c.CAR_NO,
+c.CAR_TYPE,
+TO_CHAR(cr.RENT_START, 'yyyy-mm-dd') AS RENT_START,
+TO_CHAR(cr.RENT_END, 'yyyy-mm-dd') AS RENT_END,
+p.PAYMENT_METHOD, 
+c.PRICE + c.INSURANCE AS money 
+FROM 
+CAR c 
+JOIN CAR_RENT cr ON c.CAR_NO = cr.CAR_NO 
+JOIN PAYMENT p ON c.CAR_NO = p.CAR_NO 
+WHERE
+cr.NAME = '홍승희'
+ORDER BY RENT_START;
+
+SELECT c.car_no , c.car_type, to_char(cr.rent_start,'yyyy-mm-dd'), TO_CHAR(cr.rent_end, 'yyyy-mm-dd'),p.payment_method,
+(c.PRICE + c.INSURANCE) AS MONEY 
+FROM CAR c JOIN CAR_RENT cr 
+ON c.CAR_NO = cr.CAR_NO 
+JOIN PAYMENT p ON c.CAR_NO = p.CAR_NO 
+WHERE cr.NAME = '홍승희'
+ORDER BY rent_start;
 
 
 
+SELECT
+    b.car_no,
+    a.car_type,
+    TO_CHAR(b.rent_start, 'yyyy-mm-dd') AS rent_start,
+    TO_CHAR(b.rent_end, 'yyyy-mm-dd') AS rent_end,
+    (a.PRICE + a.INSURANCE) * (b.rent_end - b.rent_start) AS MONEY
+FROM
+    CAR a
+JOIN
+    CAR_RENT b ON a.car_no = b.car_no
+WHERE
+    b.NAME = '심준서'
+ORDER BY
+    b.rent_start;
 
+
+payment_method,
+JOIN PAYMENT
+
+
+SELECT b.car_no ,b.car_type, b.rent_start,b.rent_end,a.payment_method,b.money
+FROM PAYMENT a JOIN (SELECT car_no , car_type, to_char(rent_start,'yyyy-mm-dd') AS rent_start, TO_CHAR(rent_end, 'yyyy-mm-dd') AS rent_end,
+(PRICE + INSURANCE) AS MONEY 
+FROM CAR JOIN CAR_RENT 
+using(car_no)
+WHERE NAME = '홍승희'
+ORDER BY rent_start) b
+ON a.car_no = b.car_no;
+
+
+SELECT b.car_no, b.car_type, b.rent_start, b.rent_end, a.payment_method, b.money
+FROM PAYMENT a
+JOIN (
+    SELECT car_no, car_type, TO_CHAR(rent_start, 'yyyy-mm-dd') AS rent_start, TO_CHAR(rent_end, 'yyyy-mm-dd') AS rent_end,
+        (PRICE + INSURANCE) AS MONEY 
+    FROM CAR
+    JOIN CAR_RENT USING (car_no)
+    WHERE NAME = '홍승희'
+    GROUP BY car_no, car_type, TO_CHAR(rent_start, 'yyyy-mm-dd'), TO_CHAR(rent_end, 'yyyy-mm-dd'), (PRICE + INSURANCE)
+    ORDER BY rent_start
+) b
+ON a.car_no = b.car_no;
+
+SELECT car_no, car_type, rent_start, rent_end, payment_method, money
+FROM (
+    SELECT b.car_no, b.car_type, b.rent_start, b.rent_end, a.payment_method, b.money,
+        ROW_NUMBER() OVER (PARTITION BY b.car_no ORDER BY b.rent_start) AS rn
+    FROM PAYMENT a
+    JOIN (
+        SELECT car_no, car_type, TO_CHAR(rent_start, 'yyyy-mm-dd') AS rent_start, TO_CHAR(rent_end, 'yyyy-mm-dd') AS rent_end,
+            (PRICE + INSURANCE) AS MONEY 
+        FROM CAR
+        JOIN CAR_RENT USING (car_no)
+        WHERE NAME = '홍승희'
+        ORDER BY rent_start
+    ) b
+    ON a.car_no = b.car_no
+) c
+WHERE rn = 1;
+
+SELECT * FROM CUSTOMER c ;
+SELECT * FROM CUSTOMERSERVICECENTER c ;
+
+SELECT name, total_money, 
+CASE
+WHEN total_money >= 500000 THEN 'VIP'
+WHEN total_money >= 300000 THEN 'GOLD'
+WHEN total_money >= 200000 THEN 'SILVER'
+ELSE 'FAMILY'
+END AS grade
+FROM (
+SELECT p.name, SUM(money) AS total_money
+FROM PAYMENT p
+JOIN CAR c ON p.car_no = c.car_no
+GROUP BY p.name
+) subquery
+ORDER BY name;
+
+SELECT 
+to_char(payment_day,'yyyy-mm') AS months, payment_method, money AS total
+FROM ( SELECT p.payment_id, p.name, p.payment_day, p.money, p.payment_method, p.car_no
+FROM PAYMENT p 
+JOIN CAR c
+ON p.car_no = c.car_no)
+GROUP BY to_char(payment_day,'yyyy-mm') , payment_method, money
+ORDER BY months DESC;
+
+SELECT
+    TO_CHAR(payment_day, 'yyyy-mm') AS months,
+    payment_method,
+    SUM(money) AS total
+FROM
+    (
+        SELECT
+            p.payment_id,
+            p.name,
+            p.payment_day,
+            p.money,
+            p.payment_method,
+            p.car_no
+        FROM
+            PAYMENT p
+        JOIN
+            CAR c ON p.car_no = c.car_no
+    )
+GROUP BY
+    TO_CHAR(payment_day, 'yyyy-mm'),
+    payment_method
+ORDER BY
+    months DESC;
 
 
