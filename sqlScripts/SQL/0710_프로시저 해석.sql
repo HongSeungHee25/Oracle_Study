@@ -291,5 +291,19 @@ GROUP BY
     payment_method
 ORDER BY
     months DESC;
+   
+-- 자주 사용될 join 결과는 view 로 만들기. view 는 create or replace 로 생성후 에 수정까지 가능.
+create or replace view mypage_buy
+as
+select buy_date , customid, p.pcode ,pname, qty, price, qty*price total from j_buy  b
+join j_product p
+on p.pcode=b.pcode
+order by buy_date desc
+;
+
+select * from mypage_buy where customid='twice';
+
+
+select sum(total) from mypage_buy where customid='twice';
 
 

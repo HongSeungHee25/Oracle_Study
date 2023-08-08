@@ -61,3 +61,6 @@ INSERT INTO money_tbl_02 VALUES (100004,tbl_money_02.nextval,3000,1,3000,'A007',
 
 SELECT *
 FROM money_tbl_02;
+
+CREATE SEQUENCE joinmem_seq
+	START WITH 100007;

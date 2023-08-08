@@ -54,6 +54,6 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE('결과 : '|| xresult);
 END;
 
-
+SELECT * FROM member_tbl_02;
 
 
