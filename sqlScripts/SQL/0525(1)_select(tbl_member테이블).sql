@@ -95,7 +95,10 @@ BEGIN
     WHERE mno = p_mno
 END;
 
-
+select custno,custname,phone,address,joindate,
+				 decode(grade,'A','VIP','B','일반','C','직원') ,city 
+				 from MEMBER_TBL_02
+				ORDER BY custno;
 
 
 
